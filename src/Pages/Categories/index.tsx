@@ -1,46 +1,60 @@
 import ProductList from '../../components/ProductList'
-import { Game } from '../Home'
-import { useEffect, useState } from 'react'
+import {
+  useGetActionGamesQuery,
+  useGetFightGamesQuery,
+  useGetRgpGamesQuery,
+  useGetSimulationGamesQuery,
+  useGetSportGamesQuery
+} from '../../services/api'
 
 const Categories = () => {
-  const [gamesAcao, setGamesAcao] = useState<Game[]>([])
-  const [gamesEsportes, setGamesEsportes] = useState<Game[]>([])
-  const [gamesSimulacao, setGamesSimulacao] = useState<Game[]>([])
-  const [gamesLuta, setGamesLuta] = useState<Game[]>([])
-  const [gamesRPG, setGamesRPG] = useState<Game[]>([])
-
-  useEffect(() => {
-    fetch('https://fake-api-tau.vercel.app/api/eplay/acao')
-      .then((res) => res.json())
-      .then((res) => setGamesAcao(res))
-
-    fetch('https://fake-api-tau.vercel.app/api/eplay/esportes')
-      .then((res) => res.json())
-      .then((res) => setGamesEsportes(res))
-
-    fetch('https://fake-api-tau.vercel.app/api/eplay/simulacao')
-      .then((res) => res.json())
-      .then((res) => setGamesSimulacao(res))
-
-    fetch('https://fake-api-tau.vercel.app/api/eplay/luta')
-      .then((res) => res.json())
-      .then((res) => setGamesLuta(res))
-
-    fetch('https://fake-api-tau.vercel.app/api/eplay/rpg')
-      .then((res) => res.json())
-      .then((res) => setGamesRPG(res))
-  }, []) //faz um fecth pra cada uma das categorias pra assim puxar os jogos e suas infos, infos essas é resgatada por conta do Game q ta la em Home configurada
+  //faz um fecth pra cada uma das categorias pra assim puxar os jogos e suas infos, infos essas é resgatada por conta do Game q ta la em Home configurada
+  const { data: actionGames, isLoading: isLoadingAction } =
+    useGetActionGamesQuery() //passa a data para carregar os conteudos do Game e o isLoading pra aparecer o loading
+  const { data: fightGames, isLoading: isLoadingFight } =
+    useGetFightGamesQuery()
+  const { data: rpgGames, isLoading: isLoadingRpg } = useGetRgpGamesQuery()
+  const { data: simulationGames, isLoading: isLoadingSimulation } =
+    useGetSimulationGamesQuery()
+  const { data: sportGames, isLoading: isLoadingSport } =
+    useGetSportGamesQuery()
 
   return (
     <>
-      <ProductList games={gamesAcao} title="Ação" background="black" />
-      <ProductList games={gamesEsportes} title="Esporte" background="gray" />
-      <ProductList games={gamesLuta} title="Luta" background="black" />
-      <ProductList games={gamesRPG} title="RPG" background="gray" />
       <ProductList
-        games={gamesSimulacao}
+        games={actionGames}
+        title="Ação"
+        background="black"
+        id="action"
+        isLoading={isLoadingAction}
+      />
+      <ProductList
+        games={sportGames}
+        title="Esporte"
+        background="gray"
+        id="sport"
+        isLoading={isLoadingSport}
+      />
+      <ProductList
+        games={fightGames}
+        title="Luta"
+        background="black"
+        id="fight"
+        isLoading={isLoadingFight}
+      />
+      <ProductList
+        games={rpgGames}
+        isLoading={isLoadingRpg}
+        title="RPG"
+        background="gray"
+        id="rpg"
+      />
+      <ProductList
+        games={simulationGames}
         title="Simulação"
         background="black"
+        id="simulation"
+        isLoading={isLoadingSimulation}
       />
     </>
   )

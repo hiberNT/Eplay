@@ -1,23 +1,23 @@
 import { useParams } from 'react-router-dom'
+import Loader from '../../components/Loader'
+
 import Hero from '../../components/Hero'
 import Section from '../../components/Section/Index'
 import Gallery from '../../components/Gallery'
-import { useEffect, useState } from 'react'
-import { Game } from '../Home'
+
+import { useGetGameQuery } from '../../services/api'
+
+type GameParams = {
+  //pra n precisar passar !game pra tornar obrigatorio o uso do type
+  id: string
+}
 
 const Product = () => {
-  const { id } = useParams() //para deixar dinamico a troca de id das pagina do site
-
-  const [game, setGame] = useState<Game>()
-
-  useEffect(() => {
-    fetch(`https://fake-api-tau.vercel.app/api/eplay/jogos/${id}`)
-      .then((res) => res.json())
-      .then((res) => setGame(res))
-  }, [id])
+  const { id } = useParams() as GameParams //para deixar dinamico a troca de id das pagina do site
+  const { data: game } = useGetGameQuery(id)
 
   if (!game) {
-    return <h3>Carregando...</h3>
+    return <Loader />
   } //para n da erro nos game que tem ?(n é obrigatorio) assim n fica undefinid
 
   return (

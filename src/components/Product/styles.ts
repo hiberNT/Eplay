@@ -11,6 +11,7 @@ export const Card = styled(Link)`
   text-decoration: none;
   color: ${cores.branca};
   display: block;
+  height: 100%;
 
   img {
     display: block;
@@ -26,7 +27,7 @@ export const Card = styled(Link)`
 //obs, lembra q quando puxo o TagContainer vem todos os estilo feito la e aqui adiciona oq eu quero
 //position relative para prender o absolute q é as tag de infos, se n prender o absolute sai do card e as tags ficam erradas
 //no card antes era apenas uma div, mas para consguir clicar nela e lvar pra outra pagina trasforma em um Link
-export const Titulo = styled.h3`
+export const Title = styled.h3`
   font-weigth: bold;
   font-size: 16px;
   display: block;
@@ -34,7 +35,7 @@ export const Titulo = styled.h3`
   margin-bottom: 8px;
 `
 
-export const Descricao = styled.p`
+export const Description = styled.p`
   font-size: 14px;
   line-height: 22px;
   display: block;

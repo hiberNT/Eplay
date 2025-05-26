@@ -1,20 +1,17 @@
-import { Game } from '../../Pages/Home'
+import { parseToBrl } from '../../utils'
+import Loader from '../Loader'
 import Product from '../Product'
 import { Container, List, Title } from './styles'
 
 export type Props = {
   title: string
   background: 'gray' | 'black'
-  games: Game[] //fiz o contructor Game para poder ter um modelo dinamico dos produtos para na ficar hard coder(estatico)
+  games?: Game[] //fiz o contructor Game para poder ter um modelo dinamico dos produtos para na ficar hard coder(estatico)
+  id?: string //fazemos esse id para os links do rodape funcionar e levar pra categoria certa quando clicarmos
+  isLoading: boolean //para aparecer o loading personalizado do pacman
 }
 
-export const formatoPreco = (preco = 0) => {
-  return new Intl.NumberFormat('pt-Br', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(preco) //para trasformar o dinheiro em BR
-}
-const ProductList = ({ title, background, games }: Props) => {
+const ProductList = ({ title, background, games, id, isLoading }: Props) => {
   const getGamesTags = (game: Game) => {
     //essa const é para renderizar itens especificos, se for o release pega a data, prices.discount o desconto e price o preço em formato BR
     const tags = []
@@ -28,30 +25,35 @@ const ProductList = ({ title, background, games }: Props) => {
     }
 
     if (game.prices.current) {
-      tags.push(formatoPreco(game.prices.current))
+      tags.push(parseToBrl(game.prices.current))
     }
 
     return tags
   }
 
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
-    <Container background={background}>
+    <Container id={id} background={background}>
       <div className="container">
         <Title>{title}</Title>
         <List>
-          {games.map((game) => (
-            <li key={game.id}>
-              <Product
-                id={game.id}
-                category={game.details.category}
-                description={game.description}
-                image={game.media.thumbnail}
-                infos={getGamesTags(game)}
-                system={game.details.system}
-                title={game.name}
-              />
-            </li>
-          ))}
+          {games && //como games type é opcional passamos um if que so renderiza o game quando existir um game pois o game recebe o data e o data pode ser undfined quando tiver carregando o conteudo ou seja n tem conteúdo ainda
+            games.map((game) => (
+              <li key={game.id}>
+                <Product
+                  id={game.id}
+                  category={game.details.category}
+                  description={game.description}
+                  image={game.media.thumbnail}
+                  infos={getGamesTags(game)}
+                  system={game.details.system}
+                  title={game.name}
+                />
+              </li>
+            ))}
         </List>
       </div>
     </Container>
